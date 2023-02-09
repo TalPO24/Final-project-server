@@ -19,7 +19,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, "public"))); //* gives access to public folder (react UI (images, texts, etc)).
+app.use(express.static(path.join(__dirname, "public/build"))); //* gives access to public folder (react UI (images, texts, etc)).
 
 // app.use("/", indexRouter);
 // app.use("/users", usersRouter);
