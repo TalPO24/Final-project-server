@@ -14,7 +14,7 @@ const apiRouter = require("./routes/api");
 const app = express();
 
 app.use(cors());
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
