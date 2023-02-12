@@ -10,9 +10,7 @@ const helmet = require("helmet");
 // const usersRouter = require("./routes/users");
 
 const apiRouter = require("./routes/api");
-
 const app = express();
-
 app.use(cors());
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(logger("dev"));
