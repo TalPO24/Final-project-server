@@ -83,9 +83,8 @@ router.post("/login", async (req, res) => {
 router.post("/userinfo", async (req, res) => {
   try {
     let token = req.headers.token;
-    console.log(token);
+    // console.log(token);
     let verifyUser = await verifyToken(token);
-    console.log(verifyUser);
     res.json({ user: verifyUser });
   } catch (err) {
     res.status(400).json(err);
@@ -99,7 +98,6 @@ router.post("/forgotpassword", async (req, res) => {
     const userData = await findUserByEmail(validatedValue.email);
     if (!userData) throw "check your inbox";
     const jwt = await genToken({ email: userData.email }, "1h");
-    console.log("http://localhost:3030/resetpassword/", jwt);
     res.json({ msg: "check your inbox" });
   } catch (err) {
     res.json({ msg: err });

@@ -22,7 +22,7 @@ router.get("/", function (req, res, next) {
 router.patch("/:id", async function (req, res, next) {
   try {
     const doc = await updateUserById(req.params.id, req.body, { new: true });
-    console.log(doc.wishList);
+
     const token = await genToken({
       name: doc.name,
       email: doc.email,
@@ -31,9 +31,7 @@ router.patch("/:id", async function (req, res, next) {
       wishList: doc.wishList,
     });
     res.status(200).json(token);
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (err) {}
 });
 
 module.exports = router;
