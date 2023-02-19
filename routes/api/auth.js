@@ -36,7 +36,9 @@ router.post("/register", async (req, res) => {
     validatedValue.password = hashedPassword;
     await createNewUser(validatedValue);
     res.status(201).json({ msg: "user created" });
-  } catch (err) {}
+  } catch (err) {
+    res.status(400).json({ err });
+  }
 });
 
 //* This code is a route handler for a POST request to the "/login" endpoint using the Express.js router.
