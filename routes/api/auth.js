@@ -36,9 +36,7 @@ router.post("/register", async (req, res) => {
     validatedValue.password = hashedPassword;
     await createNewUser(validatedValue);
     res.status(201).json({ msg: "user created" });
-  } catch (err) {
-    res.status(400).json({ err });
-  }
+  } catch (err) {}
 });
 
 //* This code is a route handler for a POST request to the "/login" endpoint using the Express.js router.
@@ -83,7 +81,6 @@ router.post("/login", async (req, res) => {
 router.post("/userinfo", async (req, res) => {
   try {
     let token = req.headers.token;
-    // console.log(token);
     let verifyUser = await verifyToken(token);
     res.json({ user: verifyUser });
   } catch (err) {
