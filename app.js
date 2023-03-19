@@ -4,12 +4,12 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const debug = require("debug");
 const cors = require("cors");
-const helmet = require("helmet");
+// const helmet = require("helmet");
 const apiRouter = require("./routes/api");
 const app = express();
 
 app.use(cors());
-app.use(helmet({ crossOriginResourcePolicy: false }));
+// app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
