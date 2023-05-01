@@ -37,7 +37,12 @@ router.post("/register", async(req, res) => {
         await createNewUser(validatedValue);
         res.status(201).json({ msg: "user created" });
     } catch (err) {
-        res.status(400).json({ err });
+        if (err.details && Array.isArray(err.details)) {
+            const errors = err.details.map((detail) => detail.message);
+            res.status(400).json({ errors });
+        } else {
+            res.status(400).json({ err });
+        }
     }
 });
 
@@ -54,13 +59,13 @@ router.post("/login", async(req, res) => {
     try {
         const validatedValue = await validateLoginSchema(req.body);
         const user = await findUserByEmail(validatedValue.email);
-        console.log("r")
+        console.log("r");
         if (!user) {
-            throw "invalid email/password";
+            throw { message: "Invalid email or password", status: 401 };
         }
         const isEqual = await cmpHash(validatedValue.password, user.password);
         if (!isEqual) {
-            throw "invalid email/password";
+            throw { message: "Invalid email or password", status: 401 };
         }
         const token = await genToken({
             name: user.name,
@@ -71,9 +76,12 @@ router.post("/login", async(req, res) => {
         });
         res.status(200).json({ token });
     } catch (err) {
-        res.json(err);
+        console.log("Error:", err);
+        res.status(err.status || 500).json({ message: err.message || "Internal server error" });
     }
 });
+
+
 
 //* Auto login
 //* This code is a route handler for a POST request to the "/userinfo" endpoint using the Express.js router.
