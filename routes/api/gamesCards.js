@@ -2,18 +2,18 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  validateNewGameSchema,
-  validateUpdateGameSchema,
-  validateDeleteGameSchema,
-  validateFindByIdSchema,
+    validateNewGameSchema,
+    validateUpdateGameSchema,
+    validateDeleteGameSchema,
+    validateFindByIdSchema,
 } = require("../../validation/game.validation");
 
 const {
-  createNewGameCards,
-  showAllGameCards,
-  showGameCardById,
-  updateGamecardById,
-  deleteGamecardById,
+    createNewGameCards,
+    showAllGameCards,
+    showGameCardById,
+    updateGamecardById,
+    deleteGamecardById,
 } = require("../../models/gamescards.model");
 
 const authMiddleware = require("../../middleware/auth.middleware");
@@ -24,13 +24,13 @@ const allowAccessMiddleware = require("../../middleware/allowModify.middleware")
 //* When this route is hit, it attempts to retrieve all game cards using the showAllGameCards function, which access the database to get all game cards records.
 //* If the operation is successful, it will respond with a JSON object containing all the game cards.
 //* If any error occurs during this process, it will respond with an error message and a status code of 400.
-router.get("/", async (req, res) => {
-  try {
-    const allGamecards = await showAllGameCards();
-    res.json({ allGamecards });
-  } catch (err) {
-    res.status(400).json(err);
-  }
+router.get("/", async(req, res) => {
+    try {
+        const allGamecards = await showAllGameCards();
+        res.json({ allGamecards });
+    } catch (err) {
+        res.status(400).json(err);
+    }
 });
 
 //* This code is a route handler for a POST request to the root endpoint ("/") using the Express.js router.
@@ -41,22 +41,22 @@ router.get("/", async (req, res) => {
 //* this function access the database to create the new game card.
 //* If the operation is successful, it will respond with a JSON object containing the data of the newly created game card and a status code of 201.
 //* If any error occurs during this process, such as a problem with the database or an invalid request, it will respond with an error message and a status code of 400.
-router.post("/", authMiddleware, async (req, res) => {
-  try {
-    const validatedValue = await validateNewGameSchema(req.body);
-    const gameData = await createNewGameCards(
-      validatedValue.gameName,
-      validatedValue.gameDescription,
-      validatedValue.gameReleaseDate,
-      validatedValue.gamePrice,
-      validatedValue.gameImg,
-      validatedValue.gameCategory,
-      req.userData.id
-    );
-    res.status(201).json(gameData);
-  } catch (err) {
-    res.status(400).json(err);
-  }
+router.post("/", authMiddleware, async(req, res) => {
+    try {
+        const validatedValue = await validateNewGameSchema(req.body);
+        const gameData = await createNewGameCards(
+            validatedValue.gameName,
+            validatedValue.gameDescription,
+            validatedValue.gameReleaseDate,
+            validatedValue.gamePrice,
+            validatedValue.gameImg,
+            validatedValue.gameCategory,
+            req.userData.id
+        );
+        res.status(201).json(gameData);
+    } catch (err) {
+        res.status(400).json(err);
+    }
 });
 
 //* This code is a route handler for a PATCH request to a specific endpoint ("/:id") using the Express.js router.
@@ -72,32 +72,32 @@ router.post("/", authMiddleware, async (req, res) => {
 //* If the operation is successful, it will respond with the updated game card data and a status code of 201.
 //* If any error occurs during this process, such as a problem with the database or an invalid request, it will respond with an error message and a status code of 401.
 router.patch(
-  "/:id",
-  authMiddleware,
-  allowAccessMiddleware,
-  async (req, res) => {
-    try {
-      const validatedValue = await validateUpdateGameSchema(req.body);
-      const gameData = await showGameCardById(req.params.id);
-      if (!gameData) throw "game not exists";
-      if (req.userData.allowAccess) {
-        await updateGamecardById(
-          req.params.id,
-          validatedValue.gameName,
-          validatedValue.gameDescription,
-          validatedValue.gameReleaseDate,
-          validatedValue.gamePrice,
-          validatedValue.gameCategory,
-          validatedValue.gameImg
-        );
-      } else {
-        throw "invalid operation";
-      }
-      res.status(201).json(gameData);
-    } catch (err) {
-      res.status(401).json(err);
+    "/:id",
+    authMiddleware,
+    allowAccessMiddleware,
+    async(req, res) => {
+        try {
+            const validatedValue = await validateUpdateGameSchema(req.body);
+            const gameData = await showGameCardById(req.params.id);
+            if (!gameData) throw "game not exists";
+            if (req.userData.allowAccess) {
+                await updateGamecardById(
+                    req.params.id,
+                    validatedValue.gameName,
+                    validatedValue.gameDescription,
+                    validatedValue.gameReleaseDate,
+                    validatedValue.gamePrice,
+                    validatedValue.gameCategory,
+                    validatedValue.gameImg
+                );
+            } else {
+                throw "invalid operation";
+            }
+            res.status(201).json(gameData);
+        } catch (err) {
+            res.status(401).json(err);
+        }
     }
-  }
 );
 
 //* delete
@@ -107,22 +107,22 @@ router.patch(
 //* The game card ID is passed as a parameter in the route and is used to find and delete the game card from the database.
 //* If the user is not authenticated or does not have the appropriate access level, an error message will be returned.
 router.delete(
-  "/:id",
-  authMiddleware,
-  allowAccessMiddleware,
-  async (req, res) => {
-    try {
-      if (req.userData.allowAccess) {
-        const validatedValue = await validateDeleteGameSchema(req.params);
-        const gameData = await deleteGamecardById(validatedValue.id);
-        res.status(204).json(gameData);
-      } else {
-        throw "you are not allowed";
-      }
-    } catch (err) {
-      res.status(400).json(err);
+    "/:id",
+    authMiddleware,
+    allowAccessMiddleware,
+    async(req, res) => {
+        try {
+            if (req.userData.allowAccess) {
+                const validatedValue = await validateDeleteGameSchema(req.params);
+                const gameData = await deleteGamecardById(validatedValue.id);
+                res.status(204).json(gameData);
+            } else {
+                throw "you are not allowed";
+            }
+        } catch (err) {
+            res.status(400).json(err);
+        }
     }
-  }
 );
 
 //*params - getbyid
@@ -131,14 +131,14 @@ router.delete(
 //* Then it is using a "showGameCardById" function to retrieve the game data associated with the provided id.
 //* If the game data is found, it is returned to the client with a status code of 200.
 //* If there is an error, it is returned to the client with a status code of 400.
-router.get("/getbyid/:id", async (req, res) => {
-  try {
-    const validatedValue = await validateFindByIdSchema(req.params);
-    const gameData = await showGameCardById(validatedValue.id);
-    res.status(200).json(gameData);
-  } catch (err) {
-    res.status(400).json(err);
-  }
+router.get("/getbyid/:id", async(req, res) => {
+    try {
+        const validatedValue = await validateFindByIdSchema(req.params);
+        const gameData = await showGameCardById(validatedValue.id);
+        res.status(200).json(gameData);
+    } catch (err) {
+        res.status(400).json(err);
+    }
 });
 
 module.exports = router;
