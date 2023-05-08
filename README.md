@@ -1,7 +1,5 @@
 # Final-project-server
 
-Instructions for running the project:
-
 To run the project, you need to download the folders:
 
 - Final-project-client
@@ -27,7 +25,7 @@ Email - tal@gmail.com
 
 Password - Aa123456!
 
-To log in with a normal user, you can do it on the registration page or log in with an existing user:
+To log in with a normal user, you can do it on the registration page by creating a new user or log in with an existing user:
 
 Email - test3@gmail.com
 
