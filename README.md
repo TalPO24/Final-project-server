@@ -1,6 +1,6 @@
 # Final-project-server
 
-Instructions for running the project:
+Instructions for running the project :
 
 To run the project, you need to download the folders:
 
